@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function Button({ onLoadMore }) {
   return (
@@ -7,3 +8,7 @@ export default function Button({ onLoadMore }) {
     </button>
   );
 }
+
+Button.propTypes = {
+  onClick: PropTypes.func,
+};

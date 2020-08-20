@@ -1,6 +1,15 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export default class SearchBar extends Component {
+  static propTypes = {
+    state: PropTypes.shape({
+      inputValue: PropTypes.string,
+    }),
+    handleChange: PropTypes.func,
+    handleSubmit: PropTypes.func,
+  };
+
   state = { inputValue: "" };
 
   handleChange = (e) => {

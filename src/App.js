@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import SearchBar from "./components/searchbar";
 import ImageGallery from "./components/imageGallery";
 import Button from "./components/button";
+import Modal from "./components/modal";
+import Notification from "./components/notification";
 
 import Loader from "react-loader-spinner";
 
@@ -16,6 +18,8 @@ class App extends Component {
     page: 1,
     largeImageUrl: null,
     total: 0,
+    isModalOpen: false,
+    modalUrl: "",
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -53,12 +57,28 @@ class App extends Component {
     });
   };
 
+  openModal = (e) => {
+    const fullImg = e.target.dataset.modal;
+    this.setState({ isModalOpen: true, modalUrl: fullImg });
+  };
+
+  closeModal = (e) => {
+    this.setState({ isModalOpen: false, modalUrl: " " });
+  };
+
+  handleModal = (url) => {
+    this.setState({ modalUrl: url, isModalOpen: true });
+  };
+
   render() {
-    const { img, loading, total } = this.state;
+    const { img, loading, total, isModalOpen, modalUrl, error } = this.state;
     return (
       <>
         <SearchBar onSubmit={this.handleSearchFormSubmit} />
-        <ImageGallery img={img} />
+        {error && (
+          <Notification message={`We have a problem: ${error.message}`} />
+        )}
+        <ImageGallery img={img} OpenModal={this.handleModal} />
         {loading && (
           <Loader
             type="Hearts"
@@ -68,6 +88,7 @@ class App extends Component {
             timeout={5000} //5 secs/>}
           />
         )}
+        {isModalOpen && <Modal src={modalUrl} onClose={this.closeModal} />}
         {img.length > 0 && !loading && img.length !== total && (
           <Button onLoadMore={this.fetchImage} />
         )}
